@@ -5,7 +5,10 @@ from pathlib import Path
 import numpy as np
 import typer
 
-app = typer.Typer(help="店舗売上ポテンシャルシミュレータ")
+from geo_sim.explorer.cli import app as explorer_app
+
+app = typer.Typer(help="店舗売上ポテンシャルシミュレータ & 街探索ツール")
+app.add_typer(explorer_app, name="explore", help="街プロファイル探索")
 
 
 @app.command()
@@ -14,7 +17,7 @@ def simulate(
         Path("data/raw/stations_central3.csv"),
         help="駅データCSVパス (station_name, lat, lon, passengers)",
     ),
-    store_type: str = typer.Option("convenience", help="業態 (convenience, cafe, restaurant, retail)"),
+    store_type: str = typer.Option("cafe", help="業態 (convenience, cafe, restaurant, retail)"),
     beta: float = typer.Option(2.0, help="距離減衰パラメータβ"),
     max_distance: float = typer.Option(2.0, help="最大影響距離 (km)"),
     grid_step: float = typer.Option(0.3, help="候補グリッド間隔 (km)"),
