@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Town Explorer - 街プロファイラー</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; }
+        .container { display: grid; grid-template-columns: 1fr 380px; height: 100vh; }
+        #map { width: 100%; height: 100%; }
+        .sidebar { padding: 20px; overflow-y: auto; background: #fff; border-left: 1px solid #e0e0e0; }
+        h1 { font-size: 1.3em; margin-bottom: 4px; }
+        .subtitle { color: #666; font-size: 0.85em; margin-bottom: 16px; }
+        .controls { margin-bottom: 16px; }
+        .controls label { font-size: 0.85em; color: #555; display: block; margin-bottom: 4px; }
+        .controls select, .controls input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; }
+        .btn { width: 100%; padding: 10px; background: #2563eb; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 0.95em; }
+        .btn:hover { background: #1d4ed8; }
+        .btn:disabled { background: #999; cursor: not-allowed; }
+        .result { margin-top: 16px; }
+        .result h2 { font-size: 1.1em; margin-bottom: 8px; }
+        .town-type { font-size: 1.4em; font-weight: bold; color: #2563eb; margin: 8px 0; }
+        .score-section { margin-top: 12px; }
+        .score-section h3 { font-size: 0.9em; color: #555; margin-bottom: 6px; }
+        .score-row { display: flex; align-items: center; margin-bottom: 4px; font-size: 0.85em; }
+        .score-label { width: 100px; color: #333; }
+        .score-bar-bg { flex: 1; height: 8px; background: #e5e7eb; border-radius: 4px; }
+        .score-bar { height: 100%; border-radius: 4px; transition: width 0.3s; }
+        .score-bar.blue { background: #2563eb; }
+        .score-bar.green { background: #16a34a; }
+        .score-bar.orange { background: #ea580c; }
+        .score-val { width: 30px; text-align: right; color: #666; margin-left: 6px; }
+        .facilities { margin-top: 12px; }
+        .facility-tag { display: inline-block; padding: 3px 8px; margin: 2px; border-radius: 12px; font-size: 0.75em; background: #e5e7eb; color: #333; }
+        .hourly-chart { margin-top: 12px; }
+        .hourly-row { display: flex; align-items: center; font-size: 0.7em; margin: 1px 0; }
+        .hourly-label { width: 36px; color: #666; }
+        .hourly-bar { height: 6px; background: #60a5fa; border-radius: 3px; transition: width 0.3s; }
+        .loading { text-align: center; padding: 20px; color: #666; }
+        .hint { font-size: 0.8em; color: #888; margin-top: 8px; }
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; grid-template-rows: 50vh 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="map"></div>
+        <div class="sidebar">
+            <h1>Town Explorer</h1>
+            <p class="subtitle">地図をクリックして街の雰囲気を調べる</p>
+
+            <div class="controls">
+                <label>探索半径</label>
+                <select id="radius">
+                    <option value="400">400m（徒歩5分）</option>
+                    <option value="800" selected>800m（徒歩10分）</option>
+                    <option value="1200">1200m（徒歩15分）</option>
+                </select>
+                <button class="btn" id="analyzeBtn" disabled>地図をクリックしてください</button>
+            </div>
+
+            <div id="result" class="result"></div>
+            <p class="hint">データ: OpenStreetMap Overpass API</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
