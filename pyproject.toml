@@ -1,16 +1,14 @@
 [project]
 name = "geo-sim"
-version = "0.1.0"
-description = "店舗売上ポテンシャルシミュレータ（人流データ×重力モデル）"
+version = "0.2.0"
+description = "街プロファイリングツール — 地点の「街の性格」を分析する"
 requires-python = ">=3.9"
 dependencies = [
     "pandas>=2.0",
     "geopandas>=0.14",
     "shapely>=2.0",
-    "scipy>=1.11",
-    "scikit-learn>=1.3",
+    "numpy",
     "typer>=0.9",
-    "plotly>=5.0",
 ]
 
 [project.scripts]
