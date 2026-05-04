@@ -2,8 +2,8 @@
 
 人流データとオープンデータを活用した地理シミュレーションツール群。
 
-1. **店舗売上シミュレータ** — 重力モデルによる新規出店ポテンシャル推定
-2. **Town Explorer** — 街のキャラクター・生活利便性を可視化する街探索ツール
+1. **Town Explorer** — 街のキャラクター・生活利便性を可視化する街探索ツール
+2. **店舗売上シミュレータ** — 重力モデルによる新規出店ポテンシャル推定
 
 ## Town Explorer
 
@@ -13,9 +13,23 @@
 - 生活利便性スコア（買い物・飲食・医療・教育・公園・交通の6軸）
 - 時間帯別の賑わいパターン推定
 
-### Web版
+### Web版 (Next.js)
 
-`docs/index.html` をブラウザで開く、またはGitHub Pagesで公開。
+```bash
+# PostgreSQL起動
+docker compose up -d
+
+# 開発サーバー起動
+cd web && cp .env.example .env.local && npm install && npm run dev
+```
+
+構成: Next.js (App Router) + PostgreSQL (Overpass APIキャッシュ)
+
+```
+ブラウザ → POST /api/explore → キャッシュ検索(PostgreSQL)
+                                   ├─ ヒット → 即レスポンス
+                                   └─ ミス → Overpass API → DB保存 → レスポンス
+```
 
 ### CLI版
 
@@ -53,17 +67,6 @@ python -m geo_sim.cli simulate \
   --top-n 20
 ```
 
-### オプション
-
-| オプション | デフォルト | 説明 |
-|-----------|-----------|------|
-| `--stations-csv` | `data/raw/stations_central3.csv` | 駅データCSVパス |
-| `--store-type` | `cafe` | 業態 (`convenience`, `cafe`, `restaurant`, `retail`) |
-| `--beta` | `2.0` | 距離減衰パラメータ |
-| `--max-distance` | `2.0` | 最大影響距離 (km) |
-| `--grid-step` | `0.3` | 候補グリッド間隔 (km) |
-| `--top-n` | `10` | 表示する上位地点数 |
-
 ### 業態別パラメータ
 
 | 業態 | β目安 | 来店率 | 客単価 |
@@ -76,7 +79,14 @@ python -m geo_sim.cli simulate \
 ## セットアップ
 
 ```bash
+# インフラ
+docker compose up -d
+
+# Python CLI
 pip install -e .
+
+# Web
+cd web && npm install
 ```
 
 ## テスト
@@ -90,10 +100,6 @@ python -m pytest tests/
 - **施設データ**: [OpenStreetMap](https://www.openstreetmap.org/) (Overpass API)
 - **駅別乗降客数**: [国土数値情報](https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-S12-v3_0.html) (CC BY 4.0)
 - **人流メッシュ** (将来統合予定): [国土交通省 人流オープンデータ](https://www.geospatial.jp/ckan/dataset/mlit-1702)
-
-## 対象エリア
-
-港区・千代田区・中央区（東京都心3区）
 
 ## ライセンス
 
